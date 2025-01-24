@@ -15,6 +15,8 @@ public class CarSelectionManager : MonoBehaviour
     public GameObject paintBtn;
     public GameObject buyBtn;
     public GameObject drivingBtn;
+    public GameObject watchVidBtn;
+    public TextMeshProUGUI matPriceText;
 
     [Header("Scroll Bars")]
     public GameObject carsScrollView;
@@ -66,48 +68,123 @@ public class CarSelectionManager : MonoBehaviour
     public Button[] rimBtns;
     public Button[] paintBtns;
     public GameObject[] cars;
+    public Color[] carMaterialsColors;
+    public int[] MaterialPrices;
+
+
 
     public TextMeshProUGUI totalCash;
     [HideInInspector] public CarsInfo currentCar;
-    int currentCarIndex;
+  
+
+
+    //Indexes 
+    int SelectedMaterialindex=0;
+    int selectedRimIndex=0;
+    int selectedCarIndex;
     private void Start()
     {
+        //seting the 1st itme unlocked 
+        PlayerPrefs.SetInt(SelectedMaterialindex+ "SelectedMaterialindex", 1);
+        SelectedMaterialindex = PlayerPrefs.GetInt("SelectedMaterialindex");
+
+        PlayerPrefs.SetInt(selectedCarIndex + "selectedCarIndex", 1);
+        selectedCarIndex = PlayerPrefs.GetInt("selectedCarIndex");
+
+       
+
         totalCash.text = PlayerPrefs.GetInt("TotalCash", 1000).ToString();
-        currentCarIndex = 0;
-        currentCar = carsInfo[currentCarIndex];
+        selectedCarIndex = 0;
+        currentCar = carsInfo[selectedCarIndex];
 
        UpdateCarInfo();
+        for(int i = 0; i < carMaterialsColors.Length; i++)
+        {
+            carsInfo[i].carMaterial.color= carMaterialsColors[i];
+        }
 
-
-        //AdListener for cars
+        //AddListener to change car Mesh
         for (int i = 0; i < carBtns.Length; i++)
             {
             int buttonIndex = i;
-            carBtns[buttonIndex].onClick.AddListener(() => ChangeCarInfo(buttonIndex));
+            carBtns[buttonIndex].onClick.AddListener(() => CarMeshChanger(buttonIndex));
             }
-    }
-    public void ChangeCarInfo(int index)
-    {
-        currentCarIndex = index;
-        currentCar = carsInfo[currentCarIndex];
 
+        //AddListener to change selected car material
+        for (int i = 0; i < paintBtns.Length; i++)
+        {
+            int buttonIndex = i;
+            paintBtns[buttonIndex].onClick.AddListener(() => CarMaterialChanger(buttonIndex));
+        }
+
+        //AddListener to change selected car rims
+        for(int i=0;i< rimBtns.Length; i++)
+        {
+            int buttonIndex = i;
+            rimBtns[buttonIndex].onClick.AddListener(() => CarRimsChanger(buttonIndex));
+        }
+
+    }
+    public void UpdateMaterialButtons()
+    {
+      if(PlayerPrefs.GetInt(SelectedMaterialindex+ "SelectedMaterialindex", 0) == 1)
+        {
+            buyBtn.SetActive(false);
+            drivingBtn.SetActive(true);
+            watchVidBtn.SetActive(false);
+        }
+        else
+        {
+            matPriceText.text = "$" + MaterialPrices[SelectedMaterialindex];
+            buyBtn.SetActive(true);
+            drivingBtn.SetActive(false);
+        }
+    }
+    public void CarMeshChanger(int index)
+    {
+        selectedCarIndex = index;
+        currentCar = carsInfo[selectedCarIndex];
+        Debug.LogError("the current car is " + selectedCarIndex);
         UpdateCarInfo();
       
         for (int i = 0; i < carsInfo.Count; i++)
         {
-            if (i != currentCarIndex)
+            if (i != selectedCarIndex)
             {
-                //carsInfo[i].Car.SetActive(false);
+                
                 cars[i].SetActive(false);
             }
             else
             {
                 cars[i].SetActive(true);
-                //carsInfo[i].Car.SetActive(true);
+              
 
             }
         }
     }
+ 
+
+    //
+    public void CarMaterialChanger(int indexx)
+    {
+
+        SelectedMaterialindex = indexx;
+        Color chosenColor = carMaterialsColors[SelectedMaterialindex];
+
+        currentCar.carMaterial.SetColor("_Color", chosenColor);
+
+        UpdateMaterialButtons();
+
+
+    }
+  
+    public void CarRimsChanger(int index)
+    {
+        selectedRimIndex = index;
+
+        RCC_Customization.ChangeWheels(currentCar.Rcc, RCC_ChangableWheels.Instance.wheels[index].wheel,true);
+    }
+
     //to be called on cars Btn 
     public void Cars()
     {
@@ -126,6 +203,7 @@ public class CarSelectionManager : MonoBehaviour
     //to be called on buy Btn 
     public void Paint()
     {
+        Debug.LogError("the selected car is  " + selectedCarIndex);
         carsScrollView.SetActive(false);
         rimsScrollView.SetActive(false);
         paintScrollView.SetActive(true);
