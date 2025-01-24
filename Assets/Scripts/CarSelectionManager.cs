@@ -17,6 +17,10 @@ public class CarSelectionManager : MonoBehaviour
     public GameObject drivingBtn;
     public GameObject watchVidBtn;
     public TextMeshProUGUI matPriceText;
+    public GameObject matBtnsUI;
+    public GameObject carBtnsUI;
+    public GameObject rimBtnsUI;
+
 
     [Header("Scroll Bars")]
     public GameObject carsScrollView;
@@ -191,6 +195,10 @@ public class CarSelectionManager : MonoBehaviour
         carsScrollView.SetActive(true);
         rimsScrollView.SetActive(false);
         paintScrollView.SetActive(false);
+        matBtnsUI.SetActive(false);
+        rimBtnsUI.SetActive(false);
+        carBtnsUI.SetActive(true);
+
     }
 
     //to be called on rims Btn 
@@ -199,6 +207,9 @@ public class CarSelectionManager : MonoBehaviour
         carsScrollView.SetActive(false);
         rimsScrollView.SetActive(true);
         paintScrollView.SetActive(false);
+        matBtnsUI.SetActive(false);
+        carBtnsUI.SetActive(false);
+        rimBtnsUI.SetActive(true);
     }
     //to be called on buy Btn 
     public void Paint()
@@ -207,6 +218,9 @@ public class CarSelectionManager : MonoBehaviour
         carsScrollView.SetActive(false);
         rimsScrollView.SetActive(false);
         paintScrollView.SetActive(true);
+        matBtnsUI.SetActive(true);
+        carBtnsUI.SetActive(false);
+        rimBtnsUI.SetActive(false);
     }
 
     float toBeAddedacceleration = 100;

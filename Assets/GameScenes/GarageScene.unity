@@ -18424,6 +18424,9 @@ MonoBehaviour:
   drivingBtn: {fileID: 129488792}
   watchVidBtn: {fileID: 1626394770}
   matPriceText: {fileID: 1195617091}
+  matBtnsUI: {fileID: 1304570628}
+  carBtnsUI: {fileID: 531451513}
+  rimBtnsUI: {fileID: 370542619}
   carsScrollView: {fileID: 658142466}
   rimsScrollView: {fileID: 1934165316}
   paintScrollView: {fileID: 2050933691}
